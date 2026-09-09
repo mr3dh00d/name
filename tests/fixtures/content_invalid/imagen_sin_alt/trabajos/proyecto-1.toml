@@ -1,0 +1,25 @@
+slug = "proyecto-1"
+titulo = "Proyecto Destacado 1"
+resumen = "Una descripcion breve del proyecto numero 1 que cabe en una linea."
+problema = "El equipo no tenia forma de observar la latencia real de sus servicios, y las decisiones de rendimiento se tomaban por intuicion."
+rol = "Disenio e implementacion completa"
+decisiones = [
+  "Se eligio almacenamiento en columnas para que las consultas agregadas no crecieran con el volumen.",
+  "Se fijaron presupuestos numericos por endpoint en lugar de alertas por umbral relativo.",
+]
+resultado = "La latencia p95 bajo de 900 ms a 180 ms y quedo cubierta por una alerta automatica."
+capacidades = ["Python", "Flask"]
+fecha_inicio = 2025-01-01
+fecha_fin = 2025-04-30
+destacado = true
+orden = 10
+
+[[imagenes]]
+ruta = "img/captura.png"
+ancho = 1280
+alto = 720
+
+[[enlaces]]
+etiqueta = "Codigo en GitHub"
+url = "https://github.com/ada-prueba/proyecto-1"
+tipo = "github"

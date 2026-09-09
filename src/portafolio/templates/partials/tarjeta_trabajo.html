@@ -1,0 +1,18 @@
+{# Tarjeta de trabajo (FR-007). Reutilizada por la portada y por el indice.
+
+   `nivel` deja que quien incluye la tarjeta fije el nivel del encabezado: en la
+   portada cuelga de un h2 y en el indice cuelga del h1. Sin esto, la jerarquia
+   salta un nivel en una de las dos paginas, que es justo lo que INV-H03 prohibe
+   porque los lectores de pantalla navegan por esos niveles (FR-014). #}
+{% set nivel = nivel | default(3) %}
+<article class="tarjeta-trabajo" data-slug="{{ trabajo.slug }}">
+  <h{{ nivel }} class="tarjeta-trabajo__titulo">
+    <a href="/trabajos/{{ trabajo.slug }}">{{ trabajo.titulo }}</a>
+  </h{{ nivel }}>
+  <p class="tarjeta-trabajo__resumen">{{ trabajo.resumen }}</p>
+  <ul class="tarjeta-trabajo__capacidades" aria-label="Tecnologías aplicadas">
+    {% for capacidad in trabajo.capacidades %}
+      <li>{{ capacidad }}</li>
+    {% endfor %}
+  </ul>
+</article>

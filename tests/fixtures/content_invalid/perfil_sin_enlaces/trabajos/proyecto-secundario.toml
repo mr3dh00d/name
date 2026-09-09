@@ -1,0 +1,11 @@
+slug = "proyecto-secundario"
+titulo = "Proyecto No Destacado"
+resumen = "Un proyecto que aparece en el indice pero no en la portada."
+problema = "Los informes mensuales se generaban a mano y consumian dos dias de trabajo cada mes."
+rol = "Automatizacion del proceso"
+decisiones = ["Se genero el informe desde la fuente de datos en lugar de desde el export intermedio."]
+resultado = "El informe pasa de dos dias de trabajo manual a una ejecucion de cuatro minutos."
+capacidades = ["Python", "PostgreSQL"]
+fecha_inicio = 2024-06-01
+destacado = false
+orden = 50

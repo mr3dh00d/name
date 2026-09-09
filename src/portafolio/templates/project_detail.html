@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ trabajo.titulo }} · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}{{ trabajo.resumen }}{% endblock %}
+{% block og_tipo %}article{% endblock %}
+{% block og_titulo %}{{ trabajo.titulo }}{% endblock %}
+{% block og_descripcion %}{{ trabajo.resumen }}{% endblock %}
+{% block og_imagen %}{{ og_imagen_trabajo }}{% endblock %}
+
+{% block contenido %}
+  <article class="ficha" data-slug="{{ trabajo.slug }}">
+    <header class="ficha__cabecera">
+      <h1>{{ trabajo.titulo }}</h1>
+      <p class="ficha__resumen">{{ trabajo.resumen }}</p>
+      <p class="ficha__periodo">
+        <time datetime="{{ trabajo.fecha_inicio | iso }}">{{ trabajo.fecha_inicio | mes }}</time>
+        {% if trabajo.fecha_fin %}
+          – <time datetime="{{ trabajo.fecha_fin | iso }}">{{ trabajo.fecha_fin | mes }}</time>
+        {% else %}
+          – en curso
+        {% endif %}
+      </p>
+      <ul class="ficha__capacidades" aria-label="Tecnologías aplicadas">
+        {% for capacidad in trabajo.capacidades %}<li>{{ capacidad }}</li>{% endfor %}
+      </ul>
+    </header>
+
+    <section class="ficha__seccion" aria-labelledby="ficha-problema">
+      <h2 id="ficha-problema">El problema</h2>
+      <p>{{ trabajo.problema }}</p>
+    </section>
+
+    <section class="ficha__seccion" aria-labelledby="ficha-rol">
+      <h2 id="ficha-rol">Mi rol</h2>
+      <p>{{ trabajo.rol }}</p>
+    </section>
+
+    <section class="ficha__seccion" aria-labelledby="ficha-decisiones">
+      <h2 id="ficha-decisiones">Decisiones</h2>
+      <ul class="ficha__decisiones">
+        {% for decision in trabajo.decisiones %}<li>{{ decision }}</li>{% endfor %}
+      </ul>
+    </section>
+
+    <section class="ficha__seccion" aria-labelledby="ficha-resultado">
+      <h2 id="ficha-resultado">Resultado</h2>
+      <p>{{ trabajo.resultado }}</p>
+    </section>
+
+    {% if trabajo.descripcion %}
+      <section class="ficha__seccion" aria-labelledby="ficha-detalle">
+        <h2 id="ficha-detalle">En detalle</h2>
+        <p>{{ trabajo.descripcion }}</p>
+      </section>
+    {% endif %}
+
+    {% if trabajo.imagenes %}
+      <section class="ficha__seccion" aria-labelledby="ficha-imagenes">
+        <h2 id="ficha-imagenes">Capturas</h2>
+        {% for imagen in trabajo.imagenes %}
+          <figure class="ficha__figura">
+            <img src="/{{ imagen.ruta }}" alt="{{ imagen.alt }}"
+                 width="{{ imagen.ancho }}" height="{{ imagen.alto }}"
+                 loading="lazy" decoding="async" />
+          </figure>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if trabajo.enlaces %}
+      <section class="ficha__seccion" aria-labelledby="ficha-enlaces">
+        <h2 id="ficha-enlaces">Enlaces</h2>
+        <ul class="ficha__enlaces">
+          {% for enlace in trabajo.enlaces %}
+            <li>
+              <a href="{{ enlace.url }}" target="_blank" rel="noopener noreferrer">
+                {{ enlace.etiqueta }}<span class="visualmente-oculto"> (se abre en una pestaña nueva)</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    <nav class="ficha__volver" aria-label="Volver al índice">
+      <a href="/trabajos">← Ver todos los trabajos</a>
+    </nav>
+  </article>
+{% endblock %}

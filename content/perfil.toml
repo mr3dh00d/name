@@ -1,0 +1,22 @@
+# MARCADOR DE POSICIÓN — sustituir por los datos reales antes de publicar.
+# El formato completo está en specs/001-portafolio-personal/contracts/content-schema.md
+
+nombre = "Dereck Pavez"
+titular = "Desarrollador de Software"
+resumen = "Construyo software con foco en el rendimiento medible, la calidad del código y los estándares de prueba. Este texto es un marcador de posición pendiente de sustituir."
+ubicacion = "Chile"
+disponibilidad = "Abierto a propuestas"
+retrato = "img/retrato.jpg"
+retrato_alt = "Retrato de Dereck Pavez"
+cv = "cv/cv.pdf"
+og_imagen = "og/inicio.png"
+
+[[enlaces]]
+etiqueta = "GitHub"
+url = "https://github.com/"
+tipo = "github"
+
+[[enlaces]]
+etiqueta = "LinkedIn"
+url = "https://www.linkedin.com/"
+tipo = "linkedin"

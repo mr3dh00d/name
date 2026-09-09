@@ -1,0 +1,24 @@
+{# Identidad: nombre, titular, resumen, retrato y CV (FR-001, FR-004). #}
+<section class="perfil" aria-labelledby="perfil-titulo">
+  <div class="perfil__texto">
+    <h1 id="perfil-titulo">{{ perfil.nombre }}</h1>
+    <p class="perfil__titular">{{ perfil.titular }}</p>
+    <p class="perfil__resumen">{{ perfil.resumen }}</p>
+
+    <ul class="perfil__datos">
+      {% if perfil.ubicacion %}<li>{{ perfil.ubicacion }}</li>{% endif %}
+      {% if perfil.disponibilidad %}<li>{{ perfil.disponibilidad }}</li>{% endif %}
+    </ul>
+
+    <p class="perfil__acciones">
+      <a class="boton" href="/{{ perfil.cv }}" download>
+        Descargar CV<span class="visualmente-oculto"> de {{ perfil.nombre }} en PDF</span>
+      </a>
+    </p>
+  </div>
+
+  {% if perfil.retrato %}
+    <img class="perfil__retrato" src="/{{ perfil.retrato }}" alt="{{ perfil.retrato_alt }}"
+         width="320" height="320" fetchpriority="high" decoding="async" />
+  {% endif %}
+</section>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  {% include "partials/perfil.html" %}
+
+  <section class="destacados" aria-labelledby="destacados-titulo">
+    <h2 id="destacados-titulo">Trabajos destacados</h2>
+
+    {% if destacados %}
+      <div class="rejilla-trabajos">
+        {% for trabajo in destacados %}
+          {% with nivel = 3 %}{% include "partials/tarjeta_trabajo.html" %}{% endwith %}
+        {% endfor %}
+      </div>
+      <p class="destacados__mas"><a href="/trabajos">Ver todos los trabajos</a></p>
+    {% else %}
+      {% with mensaje = "Todavía no hay trabajos publicados." %}
+        {% include "partials/estado_vacio.html" %}
+      {% endwith %}
+    {% endif %}
+  </section>
+
+  {% include "partials/capacidades.html" %}
+  {% include "partials/experiencia.html" %}
+{% endblock %}

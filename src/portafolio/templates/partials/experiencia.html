@@ -1,0 +1,36 @@
+{# Experiencia en orden cronologico inverso (FR-003). #}
+<section class="experiencia" aria-labelledby="experiencia-titulo">
+  <h2 id="experiencia-titulo">Experiencia</h2>
+
+  {% if experiencia %}
+    <ol class="experiencia__lista">
+      {% for item in experiencia %}
+        <li class="experiencia__item">
+          <h3>{{ item.rol }}</h3>
+          <p class="experiencia__organizacion">
+            {{ item.organizacion }}{% if item.ubicacion %} · {{ item.ubicacion }}{% endif %}
+          </p>
+          <p class="experiencia__periodo">
+            <time datetime="{{ item.fecha_inicio | iso }}">{{ item.fecha_inicio | mes }}</time>
+            –
+            {% if item.fecha_fin %}
+              <time datetime="{{ item.fecha_fin | iso }}">{{ item.fecha_fin | mes }}</time>
+            {% else %}
+              actualidad
+            {% endif %}
+          </p>
+          <p>{{ item.descripcion }}</p>
+          {% if item.logros %}
+            <ul class="experiencia__logros">
+              {% for logro in item.logros %}<li>{{ logro }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    {% with mensaje = "Todavía no hay experiencia publicada." %}
+      {% include "partials/estado_vacio.html" %}
+    {% endwith %}
+  {% endif %}
+</section>

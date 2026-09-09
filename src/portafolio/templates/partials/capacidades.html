@@ -1,0 +1,26 @@
+{# Capacidades agrupadas por categoria (FR-002). #}
+<section class="capacidades" aria-labelledby="capacidades-titulo">
+  <h2 id="capacidades-titulo">Capacidades</h2>
+
+  {% if capacidades %}
+    {% for categoria, items in capacidades.items() %}
+      <div class="capacidades__grupo">
+        <h3>{{ categoria }}</h3>
+        <ul class="capacidades__lista">
+          {% for capacidad in items %}
+            <li class="capacidad" data-nivel="{{ capacidad.nivel or 'sin-nivel' }}">
+              {{ capacidad.nombre }}
+              {% if capacidad.nivel %}
+                <span class="capacidad__nivel">{{ capacidad.nivel }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    {% with mensaje = "Todavía no hay capacidades publicadas." %}
+      {% include "partials/estado_vacio.html" %}
+    {% endwith %}
+  {% endif %}
+</section>

@@ -1,0 +1,16 @@
+[[item]]
+organizacion = "Empresa Reciente"
+rol = "Ingeniera de Software Senior"
+fecha_inicio = 2024-03-01
+actual = true
+ubicacion = "Remoto"
+descripcion = "Responsable de la plataforma de datos y de los estandares de calidad del equipo."
+logros = ["Redujo el tiempo de build a la mitad", "Implanto pruebas de contrato en cinco servicios"]
+
+[[item]]
+organizacion = "Empresa Anterior"
+rol = "Ingeniera de Software"
+fecha_inicio = 2021-01-15
+actual = true
+ubicacion = "Santiago, Chile"
+descripcion = "Desarrollo de servicios internos de facturacion y sus integraciones."

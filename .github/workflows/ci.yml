@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+# Orden bloqueante fijado por la constitucion (Flujo de Desarrollo, punto 3):
+# ruff format -> ruff check -> mypy --strict -> pytest con cobertura ->
+# validacion de contenido -> auditoria de rendimiento.
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Instalar dependencias
+        run: uv sync --all-extras
+
+      - name: Formato
+        run: uv run ruff format --check .
+
+      - name: Linter
+        run: uv run ruff check .
+
+      - name: Tipos
+        run: uv run mypy
+
+      - name: Pruebas y cobertura
+        run: uv run pytest -m "not e2e" --cov --cov-fail-under=90 --durations=10
+
+      - name: Validacion de contenido (FR-012)
+        run: uv run python scripts/build.py
+
+      - name: Presupuesto de duracion de la suite (< 60 s, Principio IV)
+        run: |
+          inicio=$(date +%s)
+          uv run pytest -m "not e2e" -q
+          fin=$(date +%s)
+          duracion=$((fin - inicio))
+          echo "Suite completada en ${duracion}s"
+          if [ "$duracion" -ge 60 ]; then
+            echo "::error::La suite tardo ${duracion}s, supera el presupuesto de 60s del Principio IV"
+            exit 1
+          fi
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Instalar dependencias
+        run: uv sync --all-extras
+
+      - name: Instalar navegador
+        run: uv run playwright install --with-deps chromium
+
+      - name: Accesibilidad, teclado y experiencia
+        run: uv run pytest -m e2e -v
+
+  # Presupuestos que solo son medibles con la CDN delante: LCP, peso de pagina y
+  # puntuaciones de accesibilidad y buenas practicas (SC-002, SC-003, Principio IV).
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Esperar al despliegue de vista previa de Vercel
+        id: vercel
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 600
+
+      - name: Auditar con Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ steps.vercel.outputs.url }}
+            ${{ steps.vercel.outputs.url }}/trabajos
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+
+      - name: Auditar en movil simulado
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ steps.vercel.outputs.url }}
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
