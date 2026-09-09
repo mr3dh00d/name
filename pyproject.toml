@@ -25,9 +25,10 @@ e2e = [
     "axe-playwright-python>=0.1.4",
 ]
 
-[tool.vercel]
-entrypoint = "portafolio.wsgi:app"
-
+# Sin `entrypoint` explicito a proposito. Vercel traduce el valor de
+# `tool.vercel.entrypoint` a una ruta de archivo relativa a la raiz del
+# repositorio, y con la distribucion `src/` esa traduccion no encuentra nada.
+# `src/wsgi.py` es una de las rutas que Vercel detecta por si solo.
 [tool.vercel.scripts]
 build = "python scripts/build.py"
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
-    "src/portafolio/wsgi.py": {
+    "src/wsgi.py": {
       "excludeFiles": "{tests/**,specs/**,.github/**,scripts/**,htmlcov/**,**/*.md,.venv/**}"
     }
   },

@@ -55,7 +55,6 @@ def _registrar_cache(app: Flask) -> None:
 def create_app(
     contenido: Contenido | None = None,
     directorio_contenido: Path | None = None,
-    directorio_publico: Path | None = None,
     testing: bool = False,
 ) -> Flask:
     """Construye la aplicación con su contenido ya validado.
@@ -64,7 +63,6 @@ def create_app(
         contenido: Contenido ya cargado. Lo usan las pruebas para no depender del
             contenido real, que el Principio II exige por determinismo.
         directorio_contenido: Origen del contenido si no se inyecta uno cargado.
-        directorio_publico: Directorio de activos, para validar las rutas (INV-04).
         testing: Activa el modo de pruebas de Flask.
 
     Returns:
@@ -79,10 +77,9 @@ def create_app(
     app.config["SITIO"] = config
 
     if contenido is None:
-        contenido = cargar_contenido(
-            directorio_contenido or config.directorio_contenido,
-            directorio_publico or config.directorio_publico,
-        )
+        # Sin `publico`: INV-04 la comprueba `scripts/build.py` durante el build,
+        # cuando el repositorio completo esta presente. Ver validar_invariantes.
+        contenido = cargar_contenido(directorio_contenido or config.directorio_contenido)
     app.extensions["contenido"] = contenido
 
     _registrar_filtros(app)

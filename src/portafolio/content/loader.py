@@ -241,20 +241,30 @@ def _validar_activos(contenido: Contenido, raiz: Path, publico: Path) -> None:
             )
 
 
-def validar_invariantes(contenido: Contenido, raiz: Path, publico: Path) -> None:
-    """Comprueba los cuatro invariantes del agregado descritos en data-model.md."""
+def validar_invariantes(contenido: Contenido, raiz: Path, publico: Path | None) -> None:
+    """Comprueba los invariantes del agregado descritos en data-model.md.
+
+    INV-04 (los activos referenciados existen) solo se comprueba cuando se
+    indica ``publico``. Es una puerta de **publicación**, no de arranque:
+    ``public/`` lo sirve la CDN, y que la plataforma lo incluya o no en el
+    bundle de la función es un detalle de empaquetado del que el arranque del
+    sitio no debe depender.
+    """
     _validar_slugs_unicos(contenido, raiz)
     _validar_capacidades_referidas(contenido, raiz)
     _validar_experiencias_actuales(contenido, raiz)
-    _validar_activos(contenido, raiz, publico)
+    if publico is not None:
+        _validar_activos(contenido, raiz, publico)
 
 
-def cargar_contenido(raiz: Path, publico: Path) -> Contenido:
+def cargar_contenido(raiz: Path, publico: Path | None = None) -> Contenido:
     """Carga, valida y ordena todo el contenido del portafolio.
 
     Args:
         raiz: Directorio que contiene ``perfil.toml`` y el resto del contenido.
-        publico: Directorio de activos, para comprobar las rutas referenciadas.
+        publico: Directorio de activos. Si se indica, se comprueba que toda ruta
+            referenciada exista (INV-04). ``None`` omite esa comprobación, que
+            corresponde al build y no al arranque.
 
     Returns:
         El agregado inmutable que consultan las vistas.

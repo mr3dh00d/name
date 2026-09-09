@@ -13,7 +13,7 @@ from flask import Flask
 from portafolio import create_app
 from portafolio.content.errors import ContentValidationError
 from portafolio.content.models import Contenido
-from tests.conftest import CONTENIDO_VALIDO, PUBLICO
+from tests.conftest import CONTENIDO_VALIDO
 
 
 def test_la_aplicacion_se_construye(app: Flask) -> None:
@@ -51,7 +51,6 @@ def test_carga_el_contenido_del_disco_si_no_se_le_inyecta() -> None:
     """En producción no se inyecta contenido: la factoría lo carga del disco."""
     app = create_app(
         directorio_contenido=CONTENIDO_VALIDO,
-        directorio_publico=PUBLICO,
         testing=True,
     )
     assert app.extensions["contenido"].perfil.nombre == "Ada Prueba"
@@ -61,4 +60,4 @@ def test_contenido_invalido_impide_arrancar(tmp_path: Path) -> None:
     """Un contenido roto debe detener el arranque, no degradar el sitio (FR-012)."""
     (tmp_path / "perfil.toml").write_text('nombre = "Solo el nombre"\n', encoding="utf-8")
     with pytest.raises(ContentValidationError):
-        create_app(directorio_contenido=tmp_path, directorio_publico=PUBLICO, testing=True)
+        create_app(directorio_contenido=tmp_path, testing=True)

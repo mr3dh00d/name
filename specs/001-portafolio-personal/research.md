@@ -38,10 +38,51 @@ que no contempla de forma directa una distribución `src/` con paquete.
 - **C. Contenedor Docker con Flask**: control total sobre el sistema base, a cambio de gestionar la
   imagen, su tamaño y su ciclo de vida. Complejidad no justificada para 5 rutas estáticas.
 
-**Verificación pendiente en el primer despliegue**: confirmar que `tool.vercel.entrypoint` resuelve el
-módulo `portafolio.wsgi` con la distribución `src/`. Alternativa documentada si no lo hiciera: un
-`src/wsgi.py` con `app` de nivel superior, que es una de las rutas de detección nativas de la
-plataforma. Existe una tarea de humo explícita para este punto.
+**Verificación en el primer despliegue: FALLÓ, y la alternativa documentada era la correcta.**
+
+El despliegue `dpl_J8vy5TD1` murió en el build con:
+
+    Error: "tool.vercel.entrypoint" in "pyproject.toml" is "portafolio.wsgi:app"
+    but no matching module file was found.
+
+**Causa**: Vercel traduce el valor de `entrypoint` a una **ruta de archivo relativa a la raíz del
+repositorio** — `portafolio.wsgi` se convierte en `portafolio/wsgi.py` — y comprueba que ese archivo
+exista *antes* de intentar importar nada. Con la distribución `src/` que exige la constitución, el
+archivo está en `src/portafolio/wsgi.py`, así que la comprobación falla aunque el módulo sea
+perfectamente importable. La suposición equivocada fue tratar el entrypoint como un módulo Python;
+es una ruta de archivo.
+
+**Solución aplicada**: se elimina `tool.vercel.entrypoint` y se añade `src/wsgi.py`, que es una de
+las rutas que Vercel detecta por sí solo (`app.py`, `index.py`, `server.py`, `main.py`, `wsgi.py` o
+`asgi.py`, en la raíz, en `src/` o en `app/`). El archivo solo reexporta el `app` de
+`portafolio.wsgi`, de modo que desarrollo y producción comparten un único objeto. Incluye una
+inserción guardada de `src/` en `sys.path`, porque que el proyecto quede instalado durante el build
+es un detalle del que no conviene que dependa el arranque.
+
+**Puerta añadida**: `tests/integration/test_entrypoint_vercel.py` convierte esto en una prueba de CI.
+Verificado que falla con el entrypoint original y pasa con el corregido, así que este fallo ya no
+puede volver a llegar a un despliegue.
+
+**Segundo fallo, descubierto al corregir el primero** (`dpl_3biTwCgV`): resuelto el entrypoint, el
+build murió en la validación de contenido buscando
+`/vercel/path0/.vercel/python/.venv/lib/python3.13/content/perfil.toml`. `config.py` derivaba la
+raíz del proyecto de `Path(__file__).parent.parent.parent`, lo que da por hecho que el paquete vive
+dentro del árbol del repositorio. **Vercel instala el proyecto en `site-packages`**, así que esa
+cuenta apuntaba al interior del entorno virtual.
+
+Escapó a las pruebas locales porque `uv sync` instala el proyecto en modo editable: un `.pth` que
+apunta al repositorio, con lo que `__file__` sí caía dentro del árbol. Se reprodujo instalando el
+paquete como copia real en un entorno aparte, que es la condición de la plataforma.
+
+La raíz pasa a salir del **directorio de trabajo** — el contrato documentado de Vercel para el build
+y para la función —, con el árbol de fuentes como respaldo. Cubierto por `tests/unit/test_config.py`.
+
+**Tercera corrección, preventiva**: INV-04 (los activos referenciados existen) dejaba el arranque de
+la aplicación dependiendo de que `public/` estuviera en el bundle de la función. Como ese directorio
+lo sirve la CDN, incluirlo o no es un detalle de empaquetado, y hacer depender de él el arranque
+convertiría un cambio de empaquetado en una caída total. INV-04 pasa a ser una puerta exclusiva de
+publicación, que ejecuta `scripts/build.py` con el repositorio completo delante. Cubierto por
+`tests/integration/test_arranque_sin_public.py`.
 
 ---
 
