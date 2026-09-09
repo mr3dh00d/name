@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{% block titulo %}{{ perfil.nombre }} · {{ perfil.titular }}{% endblock %}</title>
+    <meta name="description" content="{% block descripcion %}{{ perfil.resumen }}{% endblock %}" />
+    <link rel="canonical" href="{{ url_absoluta }}" />
+
+    {# Vista previa social (FR-019). Cada página puede sobrescribir su bloque. #}
+    <meta property="og:type" content="{% block og_tipo %}profile{% endblock %}" />
+    <meta property="og:site_name" content="{{ perfil.nombre }}" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content="{% block og_titulo %}{{ perfil.nombre }} · {{ perfil.titular }}{% endblock %}" />
+    <meta property="og:description" content="{% block og_descripcion %}{{ perfil.resumen }}{% endblock %}" />
+    <meta property="og:url" content="{{ url_absoluta }}" />
+    <meta property="og:image" content="{% block og_imagen %}{{ og_imagen_por_defecto }}{% endblock %}" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="/css/site.css" />
+
+    {# CSS crítico en línea: la primera pantalla se pinta sin esperar a la hoja
+       externa, lo que sostiene el presupuesto de LCP < 2,5 s del Principio IV. #}
+    <style>
+      :root { color-scheme: light dark; }
+      body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+      .contenedor { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
+      .salto-contenido { position: absolute; left: -9999px; }
+      .salto-contenido:focus { left: 1rem; top: 1rem; position: fixed; z-index: 10; padding: 0.75rem 1rem; background: Canvas; outline: 3px solid currentColor; }
+    </style>
+  </head>
+
+  <body>
+    <a class="salto-contenido" href="#contenido">Saltar al contenido principal</a>
+
+    <header class="cabecera">
+      <div class="contenedor cabecera__interior">
+        <a class="cabecera__marca" href="/">{{ perfil.nombre }}</a>
+        <nav class="cabecera__nav" aria-label="Navegación principal">
+          <a href="/">Inicio</a>
+          <a href="/trabajos">Trabajos</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido" class="contenedor">
+      {% block contenido %}{% endblock %}
+    </main>
+
+    <footer class="pie">
+      <div class="contenedor">
+        {# FR-005 e INV-H09: los enlaces externos están en todas las páginas.
+           Sin sección de contacto (FR-006), son la única vía hacia el propietario. #}
+        {% include "partials/enlaces_externos.html" %}
+        <p class="pie__nota">
+          Hecho con Python y Flask. Sin rastreadores ni cookies.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

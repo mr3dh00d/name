@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block titulo %}Trabajos · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}Trabajos de {{ perfil.nombre }}, {{ perfil.titular }}.{% endblock %}
+{% block og_titulo %}Trabajos · {{ perfil.nombre }}{% endblock %}
+{% block og_descripcion %}Trabajos de {{ perfil.nombre }}, {{ perfil.titular }}.{% endblock %}
+
+{% block contenido %}
+  <h1>Trabajos</h1>
+
+  {% if trabajos %}
+    <div class="rejilla-trabajos">
+      {% for trabajo in trabajos %}
+        {% with nivel = 2 %}{% include "partials/tarjeta_trabajo.html" %}{% endwith %}
+      {% endfor %}
+    </div>
+  {% else %}
+    {% with mensaje = "Todavía no hay trabajos publicados." %}
+      {% include "partials/estado_vacio.html" %}
+    {% endwith %}
+  {% endif %}
+{% endblock %}

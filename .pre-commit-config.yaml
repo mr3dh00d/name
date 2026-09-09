@@ -1,0 +1,39 @@
+# Los mismos comandos que ejecuta CI, en el mismo orden bloqueante.
+# Constitucion, Flujo de Desarrollo punto 3.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff format --check
+        entry: uv run ruff format --check .
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check .
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: mypy
+        name: mypy --strict
+        entry: uv run mypy
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: pytest
+        name: pytest con umbral de cobertura
+        entry: uv run pytest --cov --cov-fail-under=90
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: validar-contenido
+        name: validacion de contenido (FR-012)
+        entry: uv run python scripts/build.py
+        language: system
+        pass_filenames: false
+        files: ^content/

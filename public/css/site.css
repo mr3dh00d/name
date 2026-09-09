@@ -1,0 +1,333 @@
+/* Portafolio personal — hoja de estilos única.
+ *
+ * Sin framework y sin JavaScript, por decisión de research.md R-007: con cinco
+ * plantillas, un framework añadiría peso y un paso de build a cambio de nada, y
+ * el presupuesto de 300 KB del Principio IV se cumple por construcción.
+ *
+ * Tipografías del sistema: cero descargas de fuentes, que es la causa habitual
+ * de texto invisible durante la carga y una fracción grande del peso de página.
+ */
+
+/* ---------------------------------------------------------------- Tokens -- */
+
+:root {
+  color-scheme: light dark;
+
+  --fondo: #fdfdfc;
+  --fondo-sutil: #f4f4f2;
+  --texto: #1a1a18;
+  --texto-sutil: #56564f;
+  --borde: #dcdcd6;
+  --acento: #7a4210;
+  --acento-fondo: #f6ecdf;
+  --foco: #7a4210;
+
+  --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+
+  --radio: 0.5rem;
+  --ancho: 68rem;
+}
+
+/* FR-016: se respeta la preferencia del sistema. No hay conmutador, porque
+   exigiría JavaScript y almacenamiento, y ningún requisito lo pide. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #14140f;
+    --fondo-sutil: #1e1e1a;
+    --texto: #eceae2;
+    --texto-sutil: #a9a79c;
+    --borde: #33332c;
+    --acento: #f0b070;
+    --acento-fondo: #2a2018;
+    --foco: #f0b070;
+  }
+}
+
+/* ------------------------------------------------------------- Cimientos -- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--fuente);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+h1, h2, h3 { line-height: 1.2; text-wrap: balance; margin: 0 0 0.5em; }
+h1 { font-size: clamp(1.9rem, 5vw, 2.9rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.35rem, 3vw, 1.7rem); letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; }
+
+p, ul, ol { margin: 0 0 1rem; }
+
+a { color: var(--acento); text-underline-offset: 0.2em; }
+a:hover { text-decoration-thickness: 2px; }
+
+/* SC-004: el indicador de foco debe ser siempre visible. */
+:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+img { max-width: 100%; height: auto; }
+
+/* FR-015 y SC-008: sin desplazamiento horizontal de 320 px a 2560 px. */
+.contenedor {
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  width: 100%;
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------- Cabecera y pie ----- */
+
+.cabecera {
+  border-bottom: 1px solid var(--borde);
+  background: var(--fondo);
+}
+
+.cabecera__interior {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+}
+
+.cabecera__marca { font-weight: 650; text-decoration: none; color: var(--texto); }
+.cabecera__nav { display: flex; gap: 1.25rem; }
+
+.pie {
+  margin-top: 4rem;
+  padding-block: 2.5rem;
+  border-top: 1px solid var(--borde);
+  background: var(--fondo-sutil);
+}
+
+.pie__nota { color: var(--texto-sutil); font-size: 0.9rem; margin-top: 1.5rem; }
+
+.enlaces-externos__titulo { font-size: 1rem; margin-bottom: 0.75rem; }
+.enlaces-externos__lista {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+/* --------------------------------------------------- Preferencias ------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------- Perfil ---- */
+
+.perfil {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+  padding-block: 3rem 2rem;
+}
+
+@media (min-width: 48rem) {
+  .perfil { grid-template-columns: minmax(0, 1fr) auto; }
+}
+
+.perfil__titular {
+  font-size: 1.25rem;
+  color: var(--acento);
+  font-weight: 550;
+  margin-top: -0.25rem;
+}
+
+.perfil__resumen { font-size: 1.125rem; max-width: 60ch; }
+
+.perfil__datos {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  color: var(--texto-sutil);
+  font-size: 0.95rem;
+}
+
+.perfil__retrato {
+  width: min(100%, 15rem);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  justify-self: center;
+}
+
+.boton {
+  display: inline-block;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--acento);
+  border-radius: var(--radio);
+  background: var(--acento-fondo);
+  color: var(--acento);
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.boton:hover { background: var(--acento); color: var(--fondo); }
+
+/* ---------------------------------------------------------- Secciones ---- */
+
+.destacados, .capacidades, .experiencia { padding-block: 2.5rem; border-top: 1px solid var(--borde); }
+
+.estado-vacio {
+  color: var(--texto-sutil);
+  font-style: italic;
+  padding: 1.25rem;
+  border: 1px dashed var(--borde);
+  border-radius: var(--radio);
+  background: var(--fondo-sutil);
+}
+
+/* -------------------------------------------------- Trabajos y tarjetas -- */
+
+.rejilla-trabajos {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+}
+
+.tarjeta-trabajo {
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 1.25rem;
+  background: var(--fondo-sutil);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tarjeta-trabajo__titulo { margin: 0; font-size: 1.1rem; }
+.tarjeta-trabajo__titulo a { text-decoration: none; }
+.tarjeta-trabajo__titulo a:hover { text-decoration: underline; }
+.tarjeta-trabajo__resumen { margin: 0; color: var(--texto-sutil); flex: 1; }
+
+.tarjeta-trabajo__capacidades,
+.ficha__capacidades {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tarjeta-trabajo__capacidades li,
+.ficha__capacidades li,
+.capacidad {
+  font-size: 0.8rem;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--fondo);
+  white-space: nowrap;
+}
+
+.destacados__mas { margin-top: 1.5rem; }
+
+/* ------------------------------------------------------- Capacidades ---- */
+
+.capacidades__grupo { margin-bottom: 1.5rem; }
+.capacidades__grupo h3 { font-size: 0.95rem; color: var(--texto-sutil); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.capacidades__lista {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.capacidad__nivel { color: var(--texto-sutil); font-size: 0.75rem; margin-left: 0.3rem; }
+
+/* -------------------------------------------------------- Experiencia --- */
+
+.experiencia__lista { list-style: none; padding: 0; display: grid; gap: 2rem; }
+.experiencia__item h3 { margin-bottom: 0.15rem; }
+.experiencia__organizacion { margin: 0; font-weight: 550; }
+.experiencia__periodo { margin: 0 0 0.5rem; color: var(--texto-sutil); font-size: 0.9rem; }
+.experiencia__logros { margin-top: 0.5rem; padding-left: 1.25rem; }
+
+/* --------------------------------------------------------------- Ficha -- */
+
+.ficha { padding-block: 2.5rem; max-width: 46rem; }
+.ficha__cabecera { padding-bottom: 1.5rem; border-bottom: 1px solid var(--borde); }
+.ficha__resumen { font-size: 1.15rem; color: var(--texto-sutil); max-width: 60ch; }
+.ficha__periodo { color: var(--texto-sutil); font-size: 0.9rem; }
+.ficha__seccion { padding-block: 1.75rem; }
+.ficha__seccion h2 { font-size: 1.2rem; }
+.ficha__decisiones { padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+.ficha__enlaces { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
+
+.ficha__figura { margin: 0 0 1.25rem; }
+.ficha__figura img { border: 1px solid var(--borde); border-radius: var(--radio); width: 100%; }
+
+.ficha__volver { padding-top: 1.5rem; border-top: 1px solid var(--borde); }
+
+/* -------------------------------------------------------------- Error --- */
+
+.error { padding-block: 4rem; max-width: 40rem; }
+.error__rutas ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1.5rem; }
+
+/* ---------------------------------------------------------- Impresión --- */
+
+/* Caso límite «impresión»: un reclutador que guarda la página como documento
+   no necesita la navegación ni los fondos, pero sí las direcciones de los
+   enlaces, que en papel no puede pulsar. */
+@media print {
+  :root { --fondo: #fff; --fondo-sutil: #fff; --texto: #000; --texto-sutil: #333; --borde: #999; }
+
+  .cabecera__nav,
+  .salto-contenido,
+  .destacados__mas,
+  .ficha__volver { display: none; }
+
+  body { font-size: 11pt; }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #333;
+    word-break: break-all;
+  }
+
+  .tarjeta-trabajo,
+  .experiencia__item,
+  .ficha__seccion { break-inside: avoid; }
+
+  .perfil { padding-block: 0 1rem; }
+  .pie { margin-top: 1.5rem; }
+}

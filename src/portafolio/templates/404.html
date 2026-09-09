@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block titulo %}Página no encontrada · {{ perfil.nombre }}{% endblock %}
+{% block descripcion %}La dirección solicitada no existe en este portafolio.{% endblock %}
+{% block og_titulo %}Página no encontrada{% endblock %}
+{% block og_descripcion %}La dirección solicitada no existe en este portafolio.{% endblock %}
+
+{% block contenido %}
+  <div class="error">
+    <h1>Esta página no existe</h1>
+    <p>
+      La dirección que has seguido no corresponde a ninguna página de este
+      portafolio. Puede que el enlace sea antiguo o que contenga una errata.
+    </p>
+    <nav class="error__rutas" aria-label="Rutas alternativas">
+      <ul>
+        <li><a href="/">Ir al inicio</a></li>
+        <li><a href="/trabajos">Ver todos los trabajos</a></li>
+      </ul>
+    </nav>
+  </div>
+{% endblock %}

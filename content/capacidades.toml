@@ -1,0 +1,21 @@
+# MARCADOR DE POSICIÓN — sustituir por las capacidades reales.
+
+[[item]]
+nombre = "Python"
+categoria = "Lenguajes"
+nivel = "avanzado"
+
+[[item]]
+nombre = "Flask"
+categoria = "Frameworks"
+nivel = "avanzado"
+
+[[item]]
+nombre = "Pytest"
+categoria = "Calidad y pruebas"
+nivel = "avanzado"
+
+[[item]]
+nombre = "SQL"
+categoria = "Datos"
+nivel = "intermedio"

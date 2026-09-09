@@ -1,0 +1,19 @@
+nombre = "Ada Prueba"
+titular = "Ingeniera de Software"
+resumen = "Construye sistemas de datos fiables y bien probados. Le interesa el rendimiento medible y el codigo que otros pueden mantener."
+ubicacion = "Santiago, Chile"
+disponibilidad = "Abierta a propuestas"
+retrato = "img/retrato.jpg"
+retrato_alt = "Retrato de Ada Prueba mirando a camara"
+cv = "cv/no-existe.pdf"
+og_imagen = "og/inicio.png"
+
+[[enlaces]]
+etiqueta = "LinkedIn"
+url = "https://linkedin.com/in/ada-prueba"
+tipo = "linkedin"
+
+[[enlaces]]
+etiqueta = "GitHub"
+url = "https://github.com/ada-prueba"
+tipo = "github"

@@ -1,0 +1,14 @@
+[[item]]
+nombre = "Python"
+categoria = "Lenguajes"
+nivel = "avanzado"
+
+[[item]]
+nombre = "Flask"
+categoria = "Frameworks"
+nivel = "avanzado"
+
+[[item]]
+nombre = "PostgreSQL"
+categoria = "Datos"
+nivel = "intermedio"

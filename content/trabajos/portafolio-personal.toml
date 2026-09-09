@@ -1,0 +1,28 @@
+# MARCADOR DE POSICIÓN — sustituir por un trabajo real.
+
+slug = "portafolio-personal"
+titulo = "Este portafolio"
+resumen = "Portafolio en Flask con presupuestos de rendimiento y cobertura verificados en CI."
+problema = "Un portafolio que solo enseña capturas no demuestra criterio de ingeniería. Este se construyó como prueba ejecutable de cómo trabajo."
+rol = "Diseño, implementación y despliegue"
+decisiones = [
+  "El contenido vive en TOML validado por esquema, separado de la presentación, para que actualizarlo no exija tocar código.",
+  "Todo el HTML se cachea en la CDN: como el contenido solo cambia al desplegar, la función apenas se invoca.",
+  "Cero JavaScript y tipografías del sistema, de modo que el presupuesto de peso se cumple por construcción y no por optimización posterior.",
+]
+resultado = "Sitio con cobertura superior al 90 %, accesibilidad AA verificada y presupuestos de rendimiento comprobados en cada integración."
+capacidades = ["Python", "Flask", "Pytest"]
+fecha_inicio = 2026-09-01
+destacado = true
+orden = 10
+
+[[imagenes]]
+ruta = "img/proyecto-ejemplo.png"
+alt = "Captura de la página principal del portafolio"
+ancho = 1280
+alto = 720
+
+[[enlaces]]
+etiqueta = "Código en GitHub"
+url = "https://github.com/"
+tipo = "github"

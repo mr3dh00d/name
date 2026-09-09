@@ -1,0 +1,14 @@
+{# Enlaces a perfiles externos (FR-005). Presentes en todas las páginas. #}
+<nav class="enlaces-externos" aria-label="Perfiles profesionales de {{ perfil.nombre }}">
+  <h2 class="enlaces-externos__titulo">Dónde encontrarme</h2>
+  <ul class="enlaces-externos__lista">
+    {% for enlace in perfil.enlaces %}
+      <li>
+        <a href="{{ enlace.url }}" target="_blank" rel="noopener noreferrer"
+           data-tipo="{{ enlace.tipo }}">
+          {{ enlace.etiqueta }}<span class="visualmente-oculto"> (se abre en una pestaña nueva)</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
