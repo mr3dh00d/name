@@ -38,10 +38,30 @@ que no contempla de forma directa una distribución `src/` con paquete.
 - **C. Contenedor Docker con Flask**: control total sobre el sistema base, a cambio de gestionar la
   imagen, su tamaño y su ciclo de vida. Complejidad no justificada para 5 rutas estáticas.
 
-**Verificación pendiente en el primer despliegue**: confirmar que `tool.vercel.entrypoint` resuelve el
-módulo `portafolio.wsgi` con la distribución `src/`. Alternativa documentada si no lo hiciera: un
-`src/wsgi.py` con `app` de nivel superior, que es una de las rutas de detección nativas de la
-plataforma. Existe una tarea de humo explícita para este punto.
+**Verificación en el primer despliegue: FALLÓ, y la alternativa documentada era la correcta.**
+
+El despliegue `dpl_J8vy5TD1` murió en el build con:
+
+    Error: "tool.vercel.entrypoint" in "pyproject.toml" is "portafolio.wsgi:app"
+    but no matching module file was found.
+
+**Causa**: Vercel traduce el valor de `entrypoint` a una **ruta de archivo relativa a la raíz del
+repositorio** — `portafolio.wsgi` se convierte en `portafolio/wsgi.py` — y comprueba que ese archivo
+exista *antes* de intentar importar nada. Con la distribución `src/` que exige la constitución, el
+archivo está en `src/portafolio/wsgi.py`, así que la comprobación falla aunque el módulo sea
+perfectamente importable. La suposición equivocada fue tratar el entrypoint como un módulo Python;
+es una ruta de archivo.
+
+**Solución aplicada**: se elimina `tool.vercel.entrypoint` y se añade `src/wsgi.py`, que es una de
+las rutas que Vercel detecta por sí solo (`app.py`, `index.py`, `server.py`, `main.py`, `wsgi.py` o
+`asgi.py`, en la raíz, en `src/` o en `app/`). El archivo solo reexporta el `app` de
+`portafolio.wsgi`, de modo que desarrollo y producción comparten un único objeto. Incluye una
+inserción guardada de `src/` en `sys.path`, porque que el proyecto quede instalado durante el build
+es un detalle del que no conviene que dependa el arranque.
+
+**Puerta añadida**: `tests/integration/test_entrypoint_vercel.py` convierte esto en una prueba de CI.
+Verificado que falla con el entrypoint original y pasa con el corregido, así que este fallo ya no
+puede volver a llegar a un despliegue.
 
 ---
 
