@@ -12,8 +12,6 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-RAIZ_PROYECTO = Path(__file__).resolve().parent.parent.parent
-
 SITIO_POR_DEFECTO = "http://localhost:5000"
 
 
@@ -32,6 +30,33 @@ class Config:
         return self.url_sitio.rstrip("/")
 
 
+def raiz_del_proyecto() -> Path:
+    """Directorio que contiene ``content/`` y ``public/``.
+
+    **No** se deriva de ``__file__``. En Vercel el paquete se instala en
+    ``site-packages``, fuera del arbol del repositorio, asi que contar
+    directorios hacia arriba desde este archivo apunta al interior del entorno
+    virtual. Fue la causa del despliegue fallido ``dpl_3biTwCgV``:
+
+        archivo : /vercel/path0/.vercel/python/.venv/lib/python3.13/content/perfil.toml
+        motivo  : el archivo no existe
+
+    La plataforma ejecuta el build y la funcion con el directorio de trabajo en
+    la raiz del proyecto, que es el contrato documentado del que hay que
+    depender. El arbol de fuentes queda como respaldo para quien ejecute desde
+    un subdirectorio de un checkout.
+    """
+    actual = Path.cwd()
+    if (actual / "content").is_dir():
+        return actual
+
+    desde_fuente = Path(__file__).resolve().parent.parent.parent
+    if (desde_fuente / "content").is_dir():
+        return desde_fuente
+
+    return actual
+
+
 def _url_del_sitio() -> str:
     """Resuelve la dirección pública, prefiriendo la que expone Vercel."""
     explicita = os.environ.get("URL_SITIO")
@@ -46,9 +71,10 @@ def _url_del_sitio() -> str:
 
 def cargar_config(testing: bool = False) -> Config:
     """Construye la configuración a partir del entorno."""
+    raiz = raiz_del_proyecto()
     return Config(
-        directorio_contenido=Path(os.environ.get("DIR_CONTENIDO", RAIZ_PROYECTO / "content")),
-        directorio_publico=Path(os.environ.get("DIR_PUBLICO", RAIZ_PROYECTO / "public")),
+        directorio_contenido=Path(os.environ.get("DIR_CONTENIDO", raiz / "content")),
+        directorio_publico=Path(os.environ.get("DIR_PUBLICO", raiz / "public")),
         url_sitio=_url_del_sitio(),
         testing=testing,
     )

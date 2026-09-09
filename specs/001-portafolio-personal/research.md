@@ -63,6 +63,27 @@ es un detalle del que no conviene que dependa el arranque.
 Verificado que falla con el entrypoint original y pasa con el corregido, así que este fallo ya no
 puede volver a llegar a un despliegue.
 
+**Segundo fallo, descubierto al corregir el primero** (`dpl_3biTwCgV`): resuelto el entrypoint, el
+build murió en la validación de contenido buscando
+`/vercel/path0/.vercel/python/.venv/lib/python3.13/content/perfil.toml`. `config.py` derivaba la
+raíz del proyecto de `Path(__file__).parent.parent.parent`, lo que da por hecho que el paquete vive
+dentro del árbol del repositorio. **Vercel instala el proyecto en `site-packages`**, así que esa
+cuenta apuntaba al interior del entorno virtual.
+
+Escapó a las pruebas locales porque `uv sync` instala el proyecto en modo editable: un `.pth` que
+apunta al repositorio, con lo que `__file__` sí caía dentro del árbol. Se reprodujo instalando el
+paquete como copia real en un entorno aparte, que es la condición de la plataforma.
+
+La raíz pasa a salir del **directorio de trabajo** — el contrato documentado de Vercel para el build
+y para la función —, con el árbol de fuentes como respaldo. Cubierto por `tests/unit/test_config.py`.
+
+**Tercera corrección, preventiva**: INV-04 (los activos referenciados existen) dejaba el arranque de
+la aplicación dependiendo de que `public/` estuviera en el bundle de la función. Como ese directorio
+lo sirve la CDN, incluirlo o no es un detalle de empaquetado, y hacer depender de él el arranque
+convertiría un cambio de empaquetado en una caída total. INV-04 pasa a ser una puerta exclusiva de
+publicación, que ejecuta `scripts/build.py` con el repositorio completo delante. Cubierto por
+`tests/integration/test_arranque_sin_public.py`.
+
 ---
 
 ## R-002 · Cómo cumplir p95 < 200 ms con una función de servidor

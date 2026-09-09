@@ -25,7 +25,6 @@ def test_arranque_con_el_contenido_real(benchmark: BenchmarkFixture) -> None:
     app = benchmark(
         lambda: create_app(
             directorio_contenido=CONFIG.directorio_contenido,
-            directorio_publico=CONFIG.directorio_publico,
         )
     )
     assert app is not None

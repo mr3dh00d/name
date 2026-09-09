@@ -35,7 +35,7 @@ def test_un_archivo_nuevo_se_publica(tmp_path: Path) -> None:
     contenido = preparar(tmp_path)
     (contenido / "trabajos" / "trabajo-anadido.toml").write_text(TRABAJO_NUEVO, encoding="utf-8")
 
-    app = create_app(directorio_contenido=contenido, directorio_publico=PUBLICO, testing=True)
+    app = create_app(directorio_contenido=contenido, testing=True)
     with app.test_client() as client:
         assert "Trabajo Añadido" in client.get("/trabajos").get_data(as_text=True)
         assert client.get("/trabajos/trabajo-anadido").status_code == 200
@@ -45,7 +45,7 @@ def test_aparece_en_la_portada_si_es_destacado(tmp_path: Path) -> None:
     contenido = preparar(tmp_path)
     (contenido / "trabajos" / "trabajo-anadido.toml").write_text(TRABAJO_NUEVO, encoding="utf-8")
 
-    app = create_app(directorio_contenido=contenido, directorio_publico=PUBLICO, testing=True)
+    app = create_app(directorio_contenido=contenido, testing=True)
     with app.test_client() as client:
         assert "Trabajo Añadido" in client.get("/").get_data(as_text=True)
 
@@ -54,7 +54,7 @@ def test_entra_en_el_sitemap(tmp_path: Path) -> None:
     contenido = preparar(tmp_path)
     (contenido / "trabajos" / "trabajo-anadido.toml").write_text(TRABAJO_NUEVO, encoding="utf-8")
 
-    app = create_app(directorio_contenido=contenido, directorio_publico=PUBLICO, testing=True)
+    app = create_app(directorio_contenido=contenido, testing=True)
     with app.test_client() as client:
         assert "/trabajos/trabajo-anadido" in client.get("/sitemap.xml").get_data(as_text=True)
 
@@ -63,7 +63,7 @@ def test_retirar_un_archivo_lo_despublica(tmp_path: Path) -> None:
     contenido = preparar(tmp_path)
     (contenido / "trabajos" / "proyecto-1.toml").unlink()
 
-    app = create_app(directorio_contenido=contenido, directorio_publico=PUBLICO, testing=True)
+    app = create_app(directorio_contenido=contenido, testing=True)
     with app.test_client() as client:
         assert client.get("/trabajos/proyecto-1").status_code == 404
 
